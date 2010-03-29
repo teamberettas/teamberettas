@@ -1,4 +1,4 @@
-Your Game Title
+Mustaches
 ===============
 
 Entry in PyWeek #4  <http://www.pyweek.org/4/>
