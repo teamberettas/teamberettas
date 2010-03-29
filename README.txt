@@ -32,6 +32,8 @@ Move the cursor around the screen with the mouse.
 
 Press the left mouse button to fire the ducks.
 
+Stroke mustache.
+
 
 
 LICENSE:
