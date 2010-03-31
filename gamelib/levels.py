@@ -1,3 +1,4 @@
+import pyglet
 from pubsub import Publisher
 from gamelib import utils, teeter
 
@@ -24,8 +25,9 @@ class LevelList(object):
         self.Level.draw(parent)
 
 class BaseLevel(utils.Subscribable):
-    def __init__(self, window, name, duration, map=None):
+    def __init__(self, window, name, duration, background):
         self.Window = window
+        self.Background = pyglet.resource.image(background)
         self.Name = name
         self.Duration = self.TimeLeft = duration
         self.Complete = False
@@ -65,11 +67,12 @@ class BaseLevel(utils.Subscribable):
             self.Instruction.tick(dt)
     
     def draw(self, parent):
+        self.Background.blit(0, 0)
         self.Teeter.draw()
 
 class FirstLevel(BaseLevel):
     def __init__(self, window):
-        BaseLevel.__init__(self, window, "First!", None)
+        BaseLevel.__init__(self, window, "First!", None, "bg_bricks.png")
         
         self.Instructions = (
             utils.Instruction("Welcome! Don't let the teeter totter tip!."),
