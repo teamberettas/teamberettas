@@ -2,10 +2,9 @@ import pyglet
 from gamelib import constants
 
 class BaseItem(pyglet.sprite.Sprite):
-    NAME = None
-    IMAGE = None
-    def __init__(self):
-        pyglet.sprite.Sprite.__init__(self, self.IMAGE)
+    def __init__(self, imageName):
+        img = pyglet.resource.image(imageName)
+        pyglet.sprite.Sprite.__init__(self, img)
         #self.scale = 2.0
         
     def clear(self):
