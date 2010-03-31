@@ -11,7 +11,7 @@ from pyglet.window import key
 from pubsub import Publisher
 
 import data
-from gamelib import splashstate, constants
+from gamelib import splashstate, playstate, constants 
 
 pyglet.resource.path.append(data.filepath("images"))
 pyglet.resource.reindex()
@@ -30,8 +30,8 @@ class Window(pyglet.window.Window):
         
     def onGameNew(self, message):
         self.State.unsubscribe()
-        #self.State = playstate.PlayState(self)
-        #self.State.start()
+        self.State = playstate.PlayState(self)
+        self.State.start()
         
     def onGameExit(self, message):
         import sys; sys.exit()
