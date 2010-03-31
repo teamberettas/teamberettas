@@ -11,10 +11,10 @@ from pyglet.window import key
 from pubsub import Publisher
 
 import data
-from gamelib import splashstate, playstate, constants 
-
 pyglet.resource.path.append(data.filepath("images"))
 pyglet.resource.reindex()
+
+from gamelib import splashstate, playstate, constants 
 
 class Window(pyglet.window.Window):
     def __init__(self):

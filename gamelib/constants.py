@@ -1,4 +1,4 @@
-TILE_SIZE = 40
+OBJECT_BASE_SIZE = 40
 VERSION = "0.1"
 
 import pyglet

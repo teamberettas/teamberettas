@@ -1,5 +1,5 @@
-from gamelib import utils
 from pubsub import Publisher
+from gamelib import utils, teeter
 
 class LevelList(object):
     def __init__(self, window):
@@ -30,6 +30,9 @@ class BaseLevel(utils.Subscribable):
         self.Duration = self.TimeLeft = duration
         self.Complete = False
         self.Instruction = None
+
+
+        self.Teeter = teeter.Teeter()
         
         self.Subscriptions = []
         self.subscribe()
@@ -53,6 +56,8 @@ class BaseLevel(utils.Subscribable):
         self.Complete = False
         
     def tick(self, dt):
+        self.Teeter.tick(dt)
+
         if not self.Complete:
            pass
 
@@ -60,7 +65,7 @@ class BaseLevel(utils.Subscribable):
             self.Instruction.tick(dt)
     
     def draw(self, parent):
-        pass
+        self.Teeter.draw()
 
 class FirstLevel(BaseLevel):
     def __init__(self, window):
