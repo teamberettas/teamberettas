@@ -15,7 +15,7 @@ class SplashState(gamestate.GameState):
         
         self.newGameLabel = pyglet.text.Label("New Game", font_size=32, batch=labelBatch)
         self.exitLabel = pyglet.text.Label("Exit", font_size=32, batch=labelBatch)
-        self.labels = (self.newGameLabel, self.continueLabel, self.exitLabel)
+        self.labels = (self.newGameLabel, self.exitLabel)
         
         for y, label in zip(self.ypositions, self.labels):
             label.x = 300
