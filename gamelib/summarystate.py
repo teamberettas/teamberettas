@@ -16,3 +16,6 @@ class SummaryState(gamestate.GameState):
                               group=constants.overlaygroup,
                               color=(200*(not won), 200*won, 0, 255),
                               )
+            
+    def draw(self):
+        constants.tilebatch.draw()

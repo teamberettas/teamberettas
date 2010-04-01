@@ -53,13 +53,8 @@ class SplashState(gamestate.GameState):
                 label.color = (255, 255, 255, 255)
             else:
                 label.color = (200, 200, 200, 255)
-                
-        
-    def tick(self, dt):
-        pass
     
     def draw(self):
-        #w, h = self.Window.width, self.Window.height
         self.bg.blit(0, 0)
         self.menuBullet.draw()
         labelBatch.draw()
