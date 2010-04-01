@@ -52,7 +52,7 @@ class SplashState(gamestate.GameState):
             if i == pos:
                 label.color = (255, 255, 255, 255)
             else:
-                label.color = (122, 122, 122, 255)
+                label.color = (200, 200, 200, 255)
                 
         
     def tick(self, dt):

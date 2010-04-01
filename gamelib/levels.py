@@ -8,6 +8,7 @@ class LevelList(object):
         self.Levels = [FirstLevel]
         self.CurrentLevel = -1
         self.Level = None
+        self.PlayedLevels = []
         
     def Next(self):
         self.CurrentLevel += 1
@@ -15,9 +16,10 @@ class LevelList(object):
             self.Level = self.Levels[self.CurrentLevel](self.Window)
             self.Level.Number = self.CurrentLevel + 1 # Use 1-based here.
             Publisher.sendMessage("level.started", self.Level)
+            self.PlayedLevels.append(self.Level)
         else:
             self.Level = None
-            Publisher.sendMessage("level.nomore")
+            Publisher.sendMessage("game.over", self.PlayedLevels)
     
     def tick(self, dt):
         self.Level.tick(dt)
@@ -98,7 +100,7 @@ class FirstLevel(BaseLevel):
         self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock()]
         
         self.Instructions = (
-            utils.Instruction("Welcome! Don't let the teeter totter tip!."),
+            utils.Instruction("Welcome. Don't let the teeter totter tip!"),
         )
         self.setInstruction(self.Instructions[0])
         Publisher.subscribe(self.onInstructionComplete, "instruction.complete")

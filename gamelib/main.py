@@ -14,7 +14,7 @@ import data
 pyglet.resource.path.append(data.filepath("images"))
 pyglet.resource.reindex()
 
-from gamelib import splashstate, playstate, constants 
+from gamelib import splashstate, playstate, summarystate, constants 
 
 class Window(pyglet.window.Window):
     def __init__(self):
@@ -35,8 +35,9 @@ class Window(pyglet.window.Window):
         self.State.start()
         
     def onGameOver(self, message):
+        levels = message.data
         self.State.unsubscribe()
-        self.State = summarystate.SummaryState(self)
+        self.State = summarystate.SummaryState(levels)
         self.State.start()
         
     def onGameExit(self, message):

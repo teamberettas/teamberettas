@@ -12,7 +12,6 @@ class PlayState(gamestate.GameState):
         
         self.Subscriptions = (
             (self.onLevelEnded, "level.ended"),
-            (self.onLevelsDone, "level.nomore"),
         )
         self.subscribe()
         
