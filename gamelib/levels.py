@@ -33,7 +33,7 @@ class BaseLevel(utils.Subscribable):
         self.Background = pyglet.resource.image(background)
         self.Name = name
         self.Duration = self.TimeLeft = duration
-        self.Complete = False
+        self.Won = False
         self.Instruction = None
 
         self.Teeter = teeter.Teeter()
@@ -55,32 +55,39 @@ class BaseLevel(utils.Subscribable):
         self.setInstruction(None)
         
     def isWon(self):
-        return False
+        return self.Won
     
     def retry(self):
         self.TimeLeft = self.Duration
         self.Complete = False
+        
+    def nextObject(self):
+        if not self.ObjectQueue:
+            self.Won = True
+            Publisher.sendMessage("level.ended", self)
+        else:
+            nextObj = self.ObjectQueue.pop(0)
+            nextObj.position = (constants.RESOLUTION[0]/2, constants.RESOLUTION[1])
+            self.CurrentObject = nextObj
         
     def tick(self, dt):
         self.Teeter.tick(dt)
 
         # Figure out what to do with the queue of objects.
         if self.CurrentObject is None:
-            if not self.ObjectQueue:
-                Publisher.sendMessage("level.ended", self)
-            else:
-                # Next item ready.
-                nextObj = self.ObjectQueue.pop(0)
-                nextObj.position = (constants.RESOLUTION[0]/2, constants.RESOLUTION[1])
-                self.CurrentObject = nextObj
-                
+            self.nextObject()
                 
         if self.CurrentObject:
             self.CurrentObject.tick(dt)
             # Did the object fall of the screen?
             if self.CurrentObject.y < 0:
-                # For now this is our next condition, later it will be lose.
+                # Oh no, the level is lost!
                 self.CurrentObject = None
+                self.Won = False
+                Publisher.sendMessage("level.ended", self)
+            elif self.Teeter.intersects(self.CurrentObject):
+                self.Teeter.hold(self.CurrentObject)
+                self.nextObject()
 
         if self.Instruction:
             self.Instruction.tick(dt)
