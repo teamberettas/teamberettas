@@ -17,8 +17,11 @@ class Teeter(BaseItem):
             self.angularVelocity += self.getForce()
             self.rotation += self.angularVelocity * dt
             
+    def getAngle(self):
+        return (math.pi / 180) * (self.rotation - 90)
+            
     def getTopPoints(self):
-        theta = (math.pi / 180) * (self.rotation - 90)
+        theta = self.getAngle()
         omega = self.width / 2
         
         dx = math.sin(theta) * omega
@@ -51,9 +54,26 @@ class Teeter(BaseItem):
             force += leverage
     
     def hold(self, itemObject):
-        self.Objects.append(itemObject)
+        # Figure out which point on the object collided, and anchor it there.
+        print 1
+        abs_x = itemObject.get_abs("x")
+        anchor = abs_x
+        itemObject.image.anchor_x = 0
+        if self.rotation < 0:
+            # It was the right side that collided
+            anchor += itemObject.width
+            itemObject.image.anchor_x += itemObject.width
+            
+        dy = itemObject.get_abs("y") - self.y
+        distance = dy / math.cos(self.getAngle())
+        self.Objects.append([distance, itemObject])
         
     def draw(self):
-        for item in self.Objects:
+        theta = self.getAngle()
+        for distance, item in self.Objects:
+            x, y = self.position
+            x += math.sin(theta) * distance
+            y += math.cos(theta) * distance
+            item.position = (x, y)
             item.draw()
         BaseItem.draw(self)
