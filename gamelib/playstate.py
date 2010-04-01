@@ -23,6 +23,7 @@ class PlayState(gamestate.GameState):
         self.Levels.Next()
         
     def onLevelsDone(self, message):
+        print 0
         pyglet.text.Label("That's a wrap!", x=100, y=450, font_size=30, batch=constants.tilebatch, group=constants.overlaygroup)
         for i, level in enumerate(self.Status):
             won = level.isWon()

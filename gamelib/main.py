@@ -26,11 +26,17 @@ class Window(pyglet.window.Window):
         
         self.State = splashstate.SplashState(self)
         Publisher.subscribe(self.onGameNew, "game.new")
+        Publisher.subscribe(self.onGameOver, "game.over")
         Publisher.subscribe(self.onGameExit, "game.exit")
         
     def onGameNew(self, message):
         self.State.unsubscribe()
         self.State = playstate.PlayState(self)
+        self.State.start()
+        
+    def onGameOver(self, message):
+        self.State.unsubscribe()
+        self.State = summarystate.SummaryState(self)
         self.State.start()
         
     def onGameExit(self, message):

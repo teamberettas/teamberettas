@@ -1,6 +1,6 @@
 import pyglet
 from pubsub import Publisher
-from gamelib import utils, teeter
+from gamelib import utils, teeter, fallingobjects, constants
 
 class LevelList(object):
     def __init__(self, window):
@@ -16,6 +16,7 @@ class LevelList(object):
             self.Level.Number = self.CurrentLevel + 1 # Use 1-based here.
             Publisher.sendMessage("level.started", self.Level)
         else:
+            self.Level = None
             Publisher.sendMessage("level.nomore")
     
     def tick(self, dt):
@@ -33,8 +34,9 @@ class BaseLevel(utils.Subscribable):
         self.Complete = False
         self.Instruction = None
 
-
         self.Teeter = teeter.Teeter()
+        self.ObjectQueue = []
+        self.CurrentObject = None
         
         self.Subscriptions = []
         self.subscribe()
@@ -60,8 +62,23 @@ class BaseLevel(utils.Subscribable):
     def tick(self, dt):
         self.Teeter.tick(dt)
 
-        if not self.Complete:
-           pass
+        # Figure out what to do with the queue of objects.
+        if self.CurrentObject is None:
+            if not self.ObjectQueue:
+                Publisher.sendMessage("level.ended", self)
+            else:
+                # Next item ready.
+                nextObj = self.ObjectQueue.pop(0)
+                nextObj.position = (constants.RESOLUTION[0]/2, constants.RESOLUTION[1])
+                self.CurrentObject = nextObj
+                
+                
+        if self.CurrentObject:
+            self.CurrentObject.tick(dt)
+            # Did the object fall of the screen?
+            if self.CurrentObject.y < 0:
+                # For now this is our next condition, later it will be lose.
+                self.CurrentObject = None
 
         if self.Instruction:
             self.Instruction.tick(dt)
@@ -69,10 +86,16 @@ class BaseLevel(utils.Subscribable):
     def draw(self, parent):
         self.Background.blit(0, 0)
         self.Teeter.draw()
+        if self.CurrentObject:
+            self.CurrentObject.draw()
+            
+        constants.tilebatch.draw()
 
 class FirstLevel(BaseLevel):
     def __init__(self, window):
         BaseLevel.__init__(self, window, "First!", None, "bg_bricks.png")
+        
+        self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock()]
         
         self.Instructions = (
             utils.Instruction("Welcome! Don't let the teeter totter tip!."),

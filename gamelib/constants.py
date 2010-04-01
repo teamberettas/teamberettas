@@ -1,4 +1,5 @@
 OBJECT_BASE_SIZE = 40
+RESOLUTION = (800, 600)
 VERSION = "0.1"
 
 import pyglet
