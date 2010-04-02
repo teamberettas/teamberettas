@@ -47,15 +47,14 @@ class Teeter(BaseItem):
         Get the net force exerted on the teeter.
         Negative force is to the left of center, positive to the right.
         """
-        force = -.05
+        force = -.1
+        for distance, obj in self.Objects:
+            leverage = -1 * distance / (self.width/2)
+            force += leverage * self.WEIGHT
         return force
-        for obj in self.Objects:
-            leverage = obj.relative_x / (self.width / 2)
-            force += leverage
     
     def hold(self, itemObject):
         # Figure out which point on the object collided, and anchor it there.
-        print 1
         abs_x = itemObject.get_abs("x")
         anchor = abs_x
         itemObject.image.anchor_x = 0
