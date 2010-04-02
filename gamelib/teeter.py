@@ -56,9 +56,13 @@ class Teeter(BaseItem):
         Get the net force exerted on the teeter.
         Negative force is to the left of center, positive to the right.
         """
-        force = -.1
+        force = 0
+        # A constant force, to get things started.
+        if not self.Objects:
+            force = -.05 
+            
         # A number to multiply the weight by to make the teeter totter just right.
-        forceScalar = 0.5
+        forceScalar = 0.3
         for distance, obj in self.Objects:
             leverage = -1 * distance / (self.width/2)
             force += leverage * self.WEIGHT * forceScalar
