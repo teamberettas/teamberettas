@@ -70,7 +70,7 @@ class Teeter(BaseItem):
         """
         force = 0
         # A number to multiply the weight by to make the teeter totter just right.
-        forceScalar = 0.3
+        forceScalar = 0.1
         for distance, obj in self.Objects:
             leverage = distance / (self.width/2)
             force += leverage * self.WEIGHT * forceScalar

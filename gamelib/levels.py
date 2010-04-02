@@ -72,7 +72,7 @@ class BaseLevel(utils.Subscribable):
         
     def nextObject(self):
         nextObj = self.ObjectQueue.pop(0)
-        nextObj.position = (self.Pipe.x, constants.RESOLUTION[1])
+        nextObj.position = self.Pipe.position
         self.CurrentObject = nextObj
         
     def tick(self, dt):
@@ -111,7 +111,7 @@ class FirstLevel(BaseLevel):
     def __init__(self, window):
         BaseLevel.__init__(self, window, "First!", None, "bg_park.png")
         
-        self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock()]
+        self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock(), fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
         
         self.Instructions = (
             utils.Instruction("Welcome. Don't let the teeter totter tip!"),

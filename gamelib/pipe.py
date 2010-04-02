@@ -7,8 +7,8 @@ class Pipe(BaseItem):
     def __init__(self):
         BaseItem.__init__(self)
         self.image.anchor_x = self.width/2
-        self.image.anchor_y = self.height
-        self.position = (constants.RESOLUTION[0]/2, constants.RESOLUTION[1])
+        self.image.anchor_y = self.height/2
+        self.position = (constants.RESOLUTION[0]/2, constants.RESOLUTION[1]-self.height/2)
         self.counter = 0
 
     def tick(self, dt):

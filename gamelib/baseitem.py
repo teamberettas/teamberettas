@@ -8,6 +8,8 @@ class BaseItem(pyglet.sprite.Sprite):
     def __init__(self):
         img = pyglet.resource.image(self.IMAGE)
         pyglet.sprite.Sprite.__init__(self, img)
+        self.image.anchor_x = self.width/2
+        self.image.anchor_y = self.height/2
         
     def get_abs_pos(self):
         return [pos - anchor for pos, anchor in zip(self.position, (self.image.anchor_x, self.image.anchor_y))]
