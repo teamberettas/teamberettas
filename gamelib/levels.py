@@ -1,6 +1,6 @@
 import pyglet
 from pubsub import Publisher
-from gamelib import utils, teeter, fallingobjects, constants
+from gamelib import utils, teeter, fallingobjects, constants, pipe
 
 class LevelList(object):
     def __init__(self, window):
@@ -39,6 +39,7 @@ class BaseLevel(utils.Subscribable):
         self.Teeter = teeter.Teeter()
         self.ObjectQueue = []
         self.CurrentObject = None
+	self.Pipe = pipe.Pipe()
         
         self.Subscriptions = []
         self.subscribe()
@@ -72,6 +73,7 @@ class BaseLevel(utils.Subscribable):
         
     def tick(self, dt):
         self.Teeter.tick(dt)
+	self.Pipe.tick(dt)
 
         # Figure out what to do with the queue of objects.
         if self.CurrentObject is None:
@@ -95,6 +97,7 @@ class BaseLevel(utils.Subscribable):
     def draw(self, parent):
         self.Background.blit(0, 0)
         self.Teeter.draw()
+	self.Pipe.draw()
         if self.CurrentObject:
             self.CurrentObject.draw()
             
