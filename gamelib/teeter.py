@@ -27,6 +27,7 @@ class Teeter(BaseItem):
             obj.rotation += adjustment * sign
             
     def getAngle(self):
+        # Pyglet handles rotation degrees (and apparently 90* offset ones) while math like radians.
         return (math.pi / 180) * (self.rotation - 90)
             
     def getTopPoints(self):
@@ -49,7 +50,13 @@ class Teeter(BaseItem):
         B = (A[0] + obj.width, A[1])
         C, D = self.getTopPoints()
         
-        return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+        intersects = ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+        
+        # This method doesn't work well if the teeter is very close to parallel since the lines may completely pass each other in a tick.
+        if not intersects:
+            pass
+        
+        return intersects
 
     def getForce(self):
         """
@@ -81,6 +88,8 @@ class Teeter(BaseItem):
         dy = itemObject.get_abs("y") - self.y
         distance = dy / math.cos(self.getAngle())
         self.Objects.append([distance, itemObject])
+        # Inform the item it has landed.
+        itemObject.Land()
         
     def draw(self):
         theta = self.getAngle()
