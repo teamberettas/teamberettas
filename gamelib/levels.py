@@ -41,8 +41,16 @@ class BaseLevel(utils.Subscribable):
         self.ObjectQueue = []
         self.CurrentObject = None
         
-        self.Subscriptions = []
+        self.Subscriptions = (
+            (self.onkeypress, "keypress"),
+        )
         self.subscribe()
+        
+    def onkeypress(self, message):
+        key = int(message.topic[-1])
+        if key == pyglet.window.key.SPACE:
+            if self.ObjectQueue:
+                self.nextObject()
         
     def setInstruction(self, instruction):
         if self.Instruction:
@@ -63,21 +71,13 @@ class BaseLevel(utils.Subscribable):
         self.Complete = False
         
     def nextObject(self):
-        if not self.ObjectQueue:
-            self.Won = True
-            Publisher.sendMessage("level.ended", self)
-        else:
-            nextObj = self.ObjectQueue.pop(0)
-            nextObj.position = (self.Pipe.x, constants.RESOLUTION[1])
-            self.CurrentObject = nextObj
+        nextObj = self.ObjectQueue.pop(0)
+        nextObj.position = (self.Pipe.x, constants.RESOLUTION[1])
+        self.CurrentObject = nextObj
         
     def tick(self, dt):
         self.Teeter.tick(dt)
         self.Pipe.tick(dt)
-
-        # Figure out what to do with the queue of objects.
-        if self.CurrentObject is None:
-            self.nextObject()
                 
         if self.CurrentObject:
             self.CurrentObject.tick(dt)
@@ -89,7 +89,10 @@ class BaseLevel(utils.Subscribable):
                 Publisher.sendMessage("level.ended", self)
             elif self.Teeter.intersects(self.CurrentObject):
                 self.Teeter.hold(self.CurrentObject)
-                self.nextObject()
+                self.CurrentObject = None
+                if not self.ObjectQueue:
+                    self.Won = True
+                    Publisher.sendMessage("level.ended", self)
 
         if self.Instruction:
             self.Instruction.tick(dt)
