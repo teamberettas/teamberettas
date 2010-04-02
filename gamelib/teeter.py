@@ -26,12 +26,12 @@ class Teeter(BaseItem):
             adjustment = min(settleSpeed * dt, abs(angleOffset))
             obj.rotation += adjustment * sign
             
-    def getAngle(self):
+    def getAngle(self, offset=0):
         # Pyglet handles rotation degrees (and apparently 90* offset ones) while math like radians.
-        return (math.pi / 180) * (self.rotation - 90)
+        return (math.pi / 180) * (self.rotation - offset)
             
     def getTopPoints(self):
-        theta = self.getAngle()
+        theta = self.getAngle(offset=270)
         omega = self.width / 2
         
         dx = math.sin(theta) * omega
@@ -52,9 +52,14 @@ class Teeter(BaseItem):
         
         intersects = ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
         
-        # This method doesn't work well if the teeter is very close to parallel since the lines may completely pass each other in a tick.
-        if not intersects:
-            pass
+        # Above method doesn't work well if the teeter is very close to parallel since the lines may completely pass each other in a tick.
+        if not intersects and abs(self.rotation) < 15:
+            selfx, selfy = self.get_abs_pos()
+            objx, objy = obj.get_abs_pos()
+            # Did the object just cross the teeter?
+            if objy < self.y and objy + obj.LastYDelta >= self.y:
+                if objx + obj.width > self.y and objx < selfx + self.width:
+                    intersects = True
         
         return intersects
 
@@ -64,39 +69,40 @@ class Teeter(BaseItem):
         Negative force is to the left of center, positive to the right.
         """
         force = 0
-        # A constant force, to get things started.
-        if not self.Objects:
-            force = -.05 
-            
         # A number to multiply the weight by to make the teeter totter just right.
         forceScalar = 0.3
         for distance, obj in self.Objects:
-            leverage = -1 * distance / (self.width/2)
+            leverage = distance / (self.width/2)
             force += leverage * self.WEIGHT * forceScalar
         return force
     
     def hold(self, itemObject):
         # Figure out which point on the object collided, and anchor it there.
-        abs_x = itemObject.get_abs("x")
-        anchor = abs_x
-        itemObject.image.anchor_x = 0
+        abs_x, abs_y = itemObject.get_abs_pos()
+        anchor = 0
+        multiplier = 1
         if self.rotation < 0:
             # It was the right side that collided
             anchor += itemObject.width
-            itemObject.image.anchor_x += itemObject.width
             
-        dy = itemObject.get_abs("y") - self.y
-        distance = dy / math.cos(self.getAngle())
+        if self.rotation % 360 == 0:
+            distance = abs_x - self.x # + itemObject.width/2
+        else:
+            dy = abs_y - self.y
+            distance = dy / math.sin(self.getAngle(180))
+            
         self.Objects.append([distance, itemObject])
         # Inform the item it has landed.
         itemObject.Land()
+        itemObject.image.anchor_y = 0
+        itemObject.image.anchor_x = anchor
         
     def draw(self):
         theta = self.getAngle()
         for distance, item in self.Objects:
             x, y = self.position
-            x += math.sin(theta) * distance
-            y += math.cos(theta) * distance
-            item.position = (x, y)
+            dx = math.cos(theta) * distance
+            dy = math.sin(theta) * distance
+            item.position = (x+dx, y-dy)
             item.draw()
         BaseItem.draw(self)

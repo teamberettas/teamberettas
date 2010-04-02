@@ -81,7 +81,7 @@ class BaseLevel(utils.Subscribable):
                 
         if self.CurrentObject:
             self.CurrentObject.tick(dt)
-            # Did the object fall of the screen?
+            # Did the object fall off the screen?
             if self.CurrentObject.y < 0:
                 # Oh no, the level is lost!
                 self.CurrentObject = None

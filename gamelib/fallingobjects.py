@@ -7,13 +7,16 @@ class BaseFallingObject(BaseItem):
         self.Gravity = 10
         self.Speed = self.Gravity * self.WEIGHT
         self.IsFalling = True
+        self.LastYDelta = 0
         
     def Land(self):
         self.IsFalling = False
 
     def tick(self, dt):
         if self.IsFalling:
-            self.y -= self.Speed * dt
+            dy = self.Speed * dt
+            self.y -= dy
+            self.LastYDelta = dy
 
 class FallingPaper(BaseFallingObject):
     IMAGE = "box_paper.png"
