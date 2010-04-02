@@ -9,7 +9,7 @@ class SplashState(gamestate.GameState):
     def __init__(self, window):
         gamestate.GameState.__init__(self)
         self.Window = window
-        self.bg = pyglet.resource.image("splashbg.png")
+        self.bg = pyglet.resource.image("bg_menugreen.png")
         self.ypositions = (400, 300, 200)
         self.currentSelection = 0
         
