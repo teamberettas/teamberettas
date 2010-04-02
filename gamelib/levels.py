@@ -102,7 +102,7 @@ class BaseLevel(utils.Subscribable):
 
 class FirstLevel(BaseLevel):
     def __init__(self, window):
-        BaseLevel.__init__(self, window, "First!", None, "bg_bricks.png")
+        BaseLevel.__init__(self, window, "First!", None, "bg_park.png")
         
         self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock()]
         
