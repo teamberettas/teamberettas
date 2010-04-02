@@ -114,7 +114,7 @@ class FirstLevel(BaseLevel):
         self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock(), fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
         
         self.Instructions = (
-            utils.Instruction("Welcome. Don't let the teeter totter tip!"),
+            utils.Instruction("Welcome. Press SPACE to release a box, but don't drop any!"),
         )
         self.setInstruction(self.Instructions[0])
         Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
