@@ -37,9 +37,9 @@ class BaseLevel(utils.Subscribable):
         self.Instruction = None
 
         self.Teeter = teeter.Teeter()
+        self.Pipe = pipe.Pipe()
         self.ObjectQueue = []
         self.CurrentObject = None
-	self.Pipe = pipe.Pipe()
         
         self.Subscriptions = []
         self.subscribe()
@@ -68,12 +68,12 @@ class BaseLevel(utils.Subscribable):
             Publisher.sendMessage("level.ended", self)
         else:
             nextObj = self.ObjectQueue.pop(0)
-            nextObj.position = (constants.RESOLUTION[0]/2, constants.RESOLUTION[1])
+            nextObj.position = (self.Pipe.x, constants.RESOLUTION[1])
             self.CurrentObject = nextObj
         
     def tick(self, dt):
         self.Teeter.tick(dt)
-	self.Pipe.tick(dt)
+        self.Pipe.tick(dt)
 
         # Figure out what to do with the queue of objects.
         if self.CurrentObject is None:
@@ -97,9 +97,10 @@ class BaseLevel(utils.Subscribable):
     def draw(self, parent):
         self.Background.blit(0, 0)
         self.Teeter.draw()
-	self.Pipe.draw()
         if self.CurrentObject:
             self.CurrentObject.draw()
+        # Draw the pipe after the objects so they can appear to come out of the pipe.
+        self.Pipe.draw()
             
         constants.tilebatch.draw()
 
