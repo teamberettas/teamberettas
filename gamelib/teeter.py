@@ -17,6 +17,15 @@ class Teeter(BaseItem):
             self.angularVelocity += self.getForce()
             self.rotation += self.angularVelocity * dt
             
+        # Adjust the angle of the objects on the teeter.
+        settleSpeed = 30
+        for distance, obj in self.Objects:
+            angleOffset = self.rotation - obj.rotation
+            sign = angleOffset / abs(angleOffset)
+            # Don't over-adjust "into" the teeter; the max adjustment is the total difference.
+            adjustment = min(settleSpeed * dt, abs(angleOffset))
+            obj.rotation += adjustment * sign
+            
     def getAngle(self):
         return (math.pi / 180) * (self.rotation - 90)
             
@@ -48,9 +57,11 @@ class Teeter(BaseItem):
         Negative force is to the left of center, positive to the right.
         """
         force = -.1
+        # A number to multiply the weight by to make the teeter totter just right.
+        forceScalar = 0.5
         for distance, obj in self.Objects:
             leverage = -1 * distance / (self.width/2)
-            force += leverage * self.WEIGHT
+            force += leverage * self.WEIGHT * forceScalar
         return force
     
     def hold(self, itemObject):
