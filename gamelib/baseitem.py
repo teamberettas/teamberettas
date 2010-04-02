@@ -3,6 +3,8 @@ from gamelib import constants
 
 class BaseItem(pyglet.sprite.Sprite):
     IMAGE = None
+    weight = 1 
+
     def __init__(self):
         img = pyglet.resource.image(self.IMAGE)
         pyglet.sprite.Sprite.__init__(self, img)
