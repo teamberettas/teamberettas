@@ -130,7 +130,7 @@ class FirstLevel(BaseLevel):
     def __init__(self, window):
         BaseLevel.__init__(self, window, "First!", None, "bg_park.png")
         
-        self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock(), fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
+        self.ObjectQueue = [fallingobjects.FallingBaby(), fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock(), fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
  
         self.Instructions = (
             utils.Instruction("Welcome. Press SPACE to release a box, but don't drop any!"),

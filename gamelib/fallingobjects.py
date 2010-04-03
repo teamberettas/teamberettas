@@ -30,5 +30,9 @@ class FallingRock(BaseFallingObject):
     IMAGE = "box_stones.png"
     WEIGHT = 40
 
+class FallingBaby(BaseFallingObject):
+    IMAGE = "baby.png"
+    WEIGHT = 25
+
 class NullItem(BaseItem):
     IMAGE = "null_item.png"
