@@ -5,7 +5,7 @@ from gamelib import utils, teeter, fallingobjects, constants, pipe
 class LevelList(object):
     def __init__(self, window):
         self.Window = window
-        self.Levels = [FirstLevel]
+        self.Levels = [FirstLevel,SecondLevel]
         self.CurrentLevel = -1
         self.Level = None
         self.PlayedLevels = []
@@ -108,7 +108,7 @@ class BaseLevel(utils.Subscribable):
             elif self.Teeter.intersects(obj):
                 self.Teeter.hold(obj)
                 self.CurrentObjects.remove(obj)
-                if self.nextObject == self.NullObject and not self.CurrentObjects:
+                if self.NextObjectInQueue == self.NullObject and not self.CurrentObjects:
                     self.Won = True
                     Publisher.sendMessage("level.ended", self)
 
@@ -130,7 +130,7 @@ class FirstLevel(BaseLevel):
     def __init__(self, window):
         BaseLevel.__init__(self, window, "First!", None, "bg_park.png")
         
-        self.ObjectQueue = [fallingobjects.FallingBaby(), fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock(), fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
+        self.ObjectQueue = [fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
  
         self.Instructions = (
             utils.Instruction("Welcome. Press SPACE to release a box, but don't drop any!"),
@@ -140,6 +140,23 @@ class FirstLevel(BaseLevel):
         
         self.setNextItem()       
  
+    def onInstructionComplete(self, message):
+        instr = message.data
+
+class SecondLevel(BaseLevel):
+    def __init__(self, window):
+        BaseLevel.__init__(self, window, "Level 2", None, "bg_night.png")
+
+        self.ObjectQueue = [fallingobjects.FallingBaby(), fallingobjects.FallingBaby(), fallingobjects.FallingBaby(), fallingobjects.FallingBaby()]
+
+        self.Instructions = (
+            utils.Instruction("Save the babies from the evil vampire bats!!"),
+        )
+        self.setInstruction(self.Instructions[0])
+        Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
+
+        self.setNextItem()
+
     def onInstructionComplete(self, message):
         instr = message.data
             
