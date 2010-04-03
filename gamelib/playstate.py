@@ -16,6 +16,7 @@ class PlayState(gamestate.GameState):
         self.subscribe()
         
     def onLevelEnded(self, message):
+        print 1
         level = message.data
         self.Status.append(level)
         level.clear()
