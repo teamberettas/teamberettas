@@ -39,7 +39,7 @@ class BaseLevel(utils.Subscribable):
         self.Teeter = teeter.Teeter()
         self.Pipe = pipe.Pipe()
         self.ObjectQueue = []
-        self.CurrentObject = None
+        self.CurrentObjects = []
 
         # self.NextObjectInQueue and self.NullObject are used to figure out the end of
         # the "next item" list and remember the position.
@@ -90,25 +90,25 @@ class BaseLevel(utils.Subscribable):
     def nextObject(self):
         nextObj = self.NextObjectInQueue 
         nextObj.position = self.Pipe.position
-        self.CurrentObject = nextObj
+        self.CurrentObjects.append(nextObj)
         self.setNextItem()
         
     def tick(self, dt):
         self.Teeter.tick(dt)
         self.Pipe.tick(dt)
                 
-        if self.CurrentObject:
-            self.CurrentObject.tick(dt)
+        for obj in self.CurrentObjects:
+            obj.tick(dt)
             # Did the object fall off the screen?
-            if self.CurrentObject.y < 0:
+            if obj.y < 0:
                 # Oh no, the level is lost!
-                self.CurrentObject = None
+                self.CurrentObjects = []
                 self.Won = False
                 Publisher.sendMessage("level.ended", self)
-            elif self.Teeter.intersects(self.CurrentObject):
-                self.Teeter.hold(self.CurrentObject)
-                self.CurrentObject = None
-                if not self.ObjectQueue:
+            elif self.Teeter.intersects(obj):
+                self.Teeter.hold(obj)
+                self.CurrentObjects.remove(obj)
+                if not self.nextObject != self.NullObject:
                     self.Won = True
                     Publisher.sendMessage("level.ended", self)
 
@@ -118,8 +118,8 @@ class BaseLevel(utils.Subscribable):
     def draw(self, parent):
         self.Background.blit(0, 0)
         self.Teeter.draw()
-        if self.CurrentObject:
-            self.CurrentObject.draw()
+        for obj in self.CurrentObjects:
+            obj.draw()
         # Draw the pipe after the objects so they can appear to come out of the pipe.
         self.Pipe.draw()
         self.NextLabel.draw()
