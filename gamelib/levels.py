@@ -106,7 +106,10 @@ class BaseLevel(utils.Subscribable):
         self.setNextItem()
         
     def tick(self, dt):
-        self.Teeter.tick(dt)
+        tipped = self.Teeter.tick(dt)
+        if tipped:
+            Publisher.sendMessage("level.ended", self)
+        
         self.Pipe.tick(dt)
                 
         for obj in self.CurrentObjects:

@@ -29,6 +29,8 @@ class Teeter(BaseItem):
         settleSpeed = 30
         for distance, obj in self.Objects:
             angleOffset = self.rotation - obj.rotation
+            if abs(angleOffset) in (0, 180):
+                return True # tipped!
             sign = angleOffset / abs(angleOffset)
             # Don't over-adjust "into" the teeter; the max adjustment is the total difference.
             adjustment = min(settleSpeed * dt, abs(angleOffset))
