@@ -7,7 +7,7 @@ import data
 class LevelList(object):
     def __init__(self, window):
         self.Window = window
-        self.Levels = [FirstLevel,SecondLevel,ThirdLevel]
+        self.Levels = [FirstLevel,SecondLevel,ThirdLevel,FourthLevel]
         self.CurrentLevel = -1
         self.Level = None
         self.PlayedLevels = []
@@ -150,14 +150,21 @@ class FirstLevel(BaseLevel):
 
 class SecondLevel(BaseLevel):
     def __init__(self, window):
-        BaseLevel.__init__(self, window, "Level 2", None, "bg_night.png")
+        BaseLevel.__init__(self, window, "Baby got Bat.", None, "bg_night.png")
         self.ObjectQueue = [fallingobjects.FallingBaby(), fallingobjects.FallingBaby(), fallingobjects.FallingBaby(), fallingobjects.FallingBaby()]
         self.Instructions = (utils.Instruction("Save the babies from the evil vampire bats!!"),)
         self.Start()
             
 class ThirdLevel(BaseLevel):
     def __init__(self, window):
-        BaseLevel.__init__(self, window, "Level 3", None, "bg_city.png")
-        self.ObjectQueue = [fallingobjects.FallingPaper(), fallingobjects.FallingPaper(), fallingobjects.FallingPaper(), fallingobjects.FallingPaper()]
+        BaseLevel.__init__(self, window, "Hot night on town.", None, "bg_city.png")
+        self.ObjectQueue = [fallingobjects.FallingNoFire(), fallingobjects.FallingNoFire(), fallingobjects.FallingPaper(), fallingobjects.FallingPaper(), fallingobjects.FallingNoFire(), fallingobjects.FallingCar()]
         self.Instructions = (utils.Instruction("Clean the city!"),)
+        self.Start()
+
+class FourthLevel(BaseLevel):
+    def __init__(self, window):
+        BaseLevel.__init__(self, window, "Hats and Bananas.", None, "bg_park.png")
+        self.ObjectQueue = [fallingobjects.FallingSombrero(), fallingobjects.FallingBanana(), fallingobjects.FallingBanana(), fallingobjects.FallingBanana(), fallingobjects.FallingSombrero(), fallingobjects.FallingBanana(), fallingobjects.FallingBanana(), fallingobjects.FallingSombrero()]
+        self.Instructions = (utils.Instruction("Yum!"),)
         self.Start()

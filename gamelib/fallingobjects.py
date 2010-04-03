@@ -34,5 +34,21 @@ class FallingBaby(BaseFallingObject):
     IMAGE = "baby.png"
     WEIGHT = 25
 
+class FallingBanana(BaseFallingObject):
+    IMAGE = "bananas.png"
+    WEIGHT = 15
+
+class FallingCar(BaseFallingObject):
+    IMAGE = "car.png"
+    WEIGHT = 60
+
+class FallingNoFire(BaseFallingObject):
+    IMAGE = "nofire.png"
+    WEIGHT = 30
+
+class FallingSombrero(BaseFallingObject):
+    IMAGE = "sombrero.png"
+    WEIGHT = 5
+
 class NullItem(BaseItem):
     IMAGE = "null_item.png"
