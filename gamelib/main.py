@@ -35,8 +35,11 @@ class Window(pyglet.window.Window):
         self.State.start()
         
     def onGameOver(self, message):
-        pyglet.media.load(data.filepath('sound/lose1.wav'), streaming=False).play()
         levels = message.data
+        if all([level.Won for level in levels]):
+            pyglet.media.load(data.filepath('sound/win1.wav'), streaming=False).play()
+        else:
+            pyglet.media.load(data.filepath('sound/lose1.wav'), streaming=False).play()
         self.State.unsubscribe()
         self.State = summarystate.SummaryState(levels)
         self.State.start()

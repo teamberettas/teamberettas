@@ -22,6 +22,7 @@ class LevelList(object):
         else:
             self.Level = None
             Publisher.sendMessage("game.over", self.PlayedLevels)
+        pyglet.media.load(data.filepath('sound/start1.wav'), streaming=False).play()
     
     def tick(self, dt):
         self.Level.tick(dt)
