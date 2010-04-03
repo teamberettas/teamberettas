@@ -44,6 +44,8 @@ class BaseLevel(utils.Subscribable):
         self.ObjectQueue = []
         self.CurrentObjects = []
         self.FallPlayer = pyglet.media.load(data.filepath('sound/fall1.wav'), streaming=False)
+        self.BabyPlayer = pyglet.media.load(data.filepath('sound/baby2.wav'), streaming=False)
+        self.LandPlayer = pyglet.media.load(data.filepath('sound/land1.wav'), streaming=False)
 
         # self.NextObjectInQueue and self.NullObject are used to figure out the end of
         # the "next item" list and remember the position.
@@ -100,9 +102,13 @@ class BaseLevel(utils.Subscribable):
             self.NextLabel.text = "No more"
  
     def nextObject(self):
-        self.FallPlayer.play()
         nextObj = self.NextObjectInQueue 
         nextObj.position = self.Pipe.position
+        if isinstance(nextObj, fallingobjects.FallingBaby):
+            self.BabyPlayer.play()
+        else:
+            self.FallPlayer.play()
+
         self.CurrentObjects.append(nextObj)
         self.setNextItem()
         
@@ -122,6 +128,7 @@ class BaseLevel(utils.Subscribable):
                 self.Won = False
                 Publisher.sendMessage("level.ended", self)
             elif self.Teeter.intersects(obj):
+                self.LandPlayer.play()
                 self.Teeter.hold(obj)
                 self.CurrentObjects.remove(obj)
                 if self.NextObjectInQueue == self.NullObject and not self.CurrentObjects:
