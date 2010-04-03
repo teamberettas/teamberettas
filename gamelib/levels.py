@@ -47,6 +47,8 @@ class BaseLevel(utils.Subscribable):
         self.NextObjectInQueue.position = (constants.RESOLUTION[0]-75, 150) 
         self.NullObject = self.NextObjectInQueue
 
+        self.NextLabel = pyglet.text.Label("Next Item", font_size=24, bold=True, x=constants.RESOLUTION[0]-155, y=200)
+
         self.Subscriptions = (
             (self.onkeypress, "keypress"),
         )
@@ -119,6 +121,7 @@ class BaseLevel(utils.Subscribable):
             self.CurrentObject.draw()
         # Draw the pipe after the objects so they can appear to come out of the pipe.
         self.Pipe.draw()
+        self.NextLabel.draw()
         self.NextObjectInQueue.draw()    
         constants.tilebatch.draw()
 
