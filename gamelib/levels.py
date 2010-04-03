@@ -40,18 +40,24 @@ class BaseLevel(utils.Subscribable):
         self.Pipe = pipe.Pipe()
         self.ObjectQueue = []
         self.CurrentObject = None
-        
+
+        # self.NextObjectInQueue and self.NullObject are used to figure out the end of
+        # the "next item" list and remember the position.
+        self.NextObjectInQueue = fallingobjects.NullItem()
+        self.NextObjectInQueue.position = (constants.RESOLUTION[0]-75, 150) 
+        self.NullObject = self.NextObjectInQueue
+
         self.Subscriptions = (
             (self.onkeypress, "keypress"),
         )
         self.subscribe()
-        
+
     def onkeypress(self, message):
         key = int(message.topic[-1])
         if key == pyglet.window.key.SPACE:
-            if self.ObjectQueue:
+            if self.NextObjectInQueue != self.NullObject:
                 self.nextObject()
-        
+
     def setInstruction(self, instruction):
         if self.Instruction:
             self.Instruction.stop()
@@ -69,11 +75,20 @@ class BaseLevel(utils.Subscribable):
     def retry(self):
         self.TimeLeft = self.Duration
         self.Complete = False
-        
+
+    def setNextItem(self):
+        if self.ObjectQueue:
+            comingUpObj = self.ObjectQueue.pop(0)
+            comingUpObj.position = self.NullObject.position
+            self.NextObjectInQueue = comingUpObj
+        else:
+            self.NextObjectInQueue = self.NullObject
+ 
     def nextObject(self):
-        nextObj = self.ObjectQueue.pop(0)
+        nextObj = self.NextObjectInQueue 
         nextObj.position = self.Pipe.position
         self.CurrentObject = nextObj
+        self.setNextItem()
         
     def tick(self, dt):
         self.Teeter.tick(dt)
@@ -104,7 +119,7 @@ class BaseLevel(utils.Subscribable):
             self.CurrentObject.draw()
         # Draw the pipe after the objects so they can appear to come out of the pipe.
         self.Pipe.draw()
-            
+        self.NextObjectInQueue.draw()    
         constants.tilebatch.draw()
 
 class FirstLevel(BaseLevel):
@@ -112,13 +127,15 @@ class FirstLevel(BaseLevel):
         BaseLevel.__init__(self, window, "First!", None, "bg_park.png")
         
         self.ObjectQueue = [fallingobjects.FallingWood(), fallingobjects.FallingPaper(), fallingobjects.FallingRock(), fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
-        
+ 
         self.Instructions = (
             utils.Instruction("Welcome. Press SPACE to release a box, but don't drop any!"),
         )
         self.setInstruction(self.Instructions[0])
         Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
         
+        self.setNextItem()       
+ 
     def onInstructionComplete(self, message):
         instr = message.data
             

@@ -29,3 +29,6 @@ class FallingWood(BaseFallingObject):
 class FallingRock(BaseFallingObject):
     IMAGE = "box_stones.png"
     WEIGHT = 40
+
+class NullItem(BaseItem):
+    IMAGE = "null_item.png"
