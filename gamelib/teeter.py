@@ -10,7 +10,7 @@ class Teeter(BaseItem):
         self.angularVelocity = 0
         self.image.anchor_x = self.width/2
         self.image.anchor_y = self.height
-        self.position = (constants.RESOLUTION[0]/2, 50)
+        self.position = (constants.RESOLUTION[0]/2, 100)
 
     def tick(self, dt):
         if abs(self.rotation) < 90:

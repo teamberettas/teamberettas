@@ -108,7 +108,7 @@ class BaseLevel(utils.Subscribable):
             elif self.Teeter.intersects(obj):
                 self.Teeter.hold(obj)
                 self.CurrentObjects.remove(obj)
-                if self.nextObject == self.NullObject and self.CurrentObjects:
+                if self.nextObject == self.NullObject and not self.CurrentObjects:
                     self.Won = True
                     Publisher.sendMessage("level.ended", self)
 
