@@ -5,7 +5,7 @@ from gamelib import utils, teeter, fallingobjects, constants, pipe
 class LevelList(object):
     def __init__(self, window):
         self.Window = window
-        self.Levels = [FirstLevel,SecondLevel]
+        self.Levels = [FirstLevel,SecondLevel,ThirdLevel]
         self.CurrentLevel = -1
         self.Level = None
         self.PlayedLevels = []
@@ -159,4 +159,21 @@ class SecondLevel(BaseLevel):
 
     def onInstructionComplete(self, message):
         instr = message.data
+
             
+class ThirdLevel(BaseLevel):
+    def __init__(self, window):
+        BaseLevel.__init__(self, window, "Level 3", None, "bg_city.png")
+
+        self.ObjectQueue = [fallingobjects.FallingPaper(), fallingobjects.FallingPaper(), fallingobjects.FallingPaper(), fallingobjects.FallingPaper()]
+
+        self.Instructions = (
+            utils.Instruction("Clean the city!"),
+        )
+        self.setInstruction(self.Instructions[0])
+        Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
+
+        self.setNextItem()
+
+    def onInstructionComplete(self, message):
+        instr = message.data
