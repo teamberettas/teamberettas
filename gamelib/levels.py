@@ -56,6 +56,14 @@ class BaseLevel(utils.Subscribable):
             (self.onkeypress, "keypress"),
         )
         self.subscribe()
+        
+    def Start(self):
+        self.setInstruction(self.Instructions[0])
+        Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
+        self.setNextItem()
+        
+    def onInstructionComplete(self, message):
+        pass
 
     def onkeypress(self, message):
         key = int(message.topic[-1])
@@ -133,51 +141,20 @@ class BaseLevel(utils.Subscribable):
 class FirstLevel(BaseLevel):
     def __init__(self, window):
         BaseLevel.__init__(self, window, "First!", None, "bg_park.png")
-        
         self.ObjectQueue = [fallingobjects.FallingPaper(), fallingobjects.FallingWood()]
- 
-        self.Instructions = (
-            utils.Instruction("Welcome. Press SPACE to release a box, but don't drop any!"),
-        )
-        self.setInstruction(self.Instructions[0])
-        Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
-        
-        self.setNextItem()       
- 
-    def onInstructionComplete(self, message):
-        instr = message.data
+        self.Instructions = (utils.Instruction("Welcome. Press SPACE to release a box, but don't drop any!"),)
+        self.Start()
 
 class SecondLevel(BaseLevel):
     def __init__(self, window):
         BaseLevel.__init__(self, window, "Level 2", None, "bg_night.png")
-
         self.ObjectQueue = [fallingobjects.FallingBaby(), fallingobjects.FallingBaby(), fallingobjects.FallingBaby(), fallingobjects.FallingBaby()]
-
-        self.Instructions = (
-            utils.Instruction("Save the babies from the evil vampire bats!!"),
-        )
-        self.setInstruction(self.Instructions[0])
-        Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
-
-        self.setNextItem()
-
-    def onInstructionComplete(self, message):
-        instr = message.data
-
+        self.Instructions = (utils.Instruction("Save the babies from the evil vampire bats!!"),)
+        self.Start()
             
 class ThirdLevel(BaseLevel):
     def __init__(self, window):
         BaseLevel.__init__(self, window, "Level 3", None, "bg_city.png")
-
         self.ObjectQueue = [fallingobjects.FallingPaper(), fallingobjects.FallingPaper(), fallingobjects.FallingPaper(), fallingobjects.FallingPaper()]
-
-        self.Instructions = (
-            utils.Instruction("Clean the city!"),
-        )
-        self.setInstruction(self.Instructions[0])
-        Publisher.subscribe(self.onInstructionComplete, "instruction.complete")
-
-        self.setNextItem()
-
-    def onInstructionComplete(self, message):
-        instr = message.data
+        self.Instructions = (utils.Instruction("Clean the city!"),)
+        self.Start()
