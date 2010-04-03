@@ -2,6 +2,8 @@ import pyglet
 from pubsub import Publisher
 from gamelib import utils, teeter, fallingobjects, constants, pipe
 
+import data
+
 class LevelList(object):
     def __init__(self, window):
         self.Window = window
@@ -40,6 +42,7 @@ class BaseLevel(utils.Subscribable):
         self.Pipe = pipe.Pipe()
         self.ObjectQueue = []
         self.CurrentObjects = []
+        self.FallPlayer = pyglet.media.load(data.filepath('sound/fall1.wav'), streaming=False)
 
         # self.NextObjectInQueue and self.NullObject are used to figure out the end of
         # the "next item" list and remember the position.
@@ -88,6 +91,7 @@ class BaseLevel(utils.Subscribable):
             self.NextLabel.text = "No more"
  
     def nextObject(self):
+        self.FallPlayer.play()
         nextObj = self.NextObjectInQueue 
         nextObj.position = self.Pipe.position
         self.CurrentObjects.append(nextObj)
