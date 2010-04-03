@@ -85,6 +85,7 @@ class BaseLevel(utils.Subscribable):
             self.NextObjectInQueue = comingUpObj
         else:
             self.NextObjectInQueue = self.NullObject
+            self.NextLabel.text = "No more"
  
     def nextObject(self):
         nextObj = self.NextObjectInQueue 
