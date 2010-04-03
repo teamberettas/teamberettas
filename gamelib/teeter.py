@@ -2,6 +2,9 @@ import pyglet, math
 from gamelib import constants
 from gamelib.baseitem import BaseItem
 
+class TeeterBase(BaseItem):
+    IMAGE = "teeter_base.png"
+
 class Teeter(BaseItem):
     IMAGE = "teeter.png"
     def __init__(self):
@@ -11,6 +14,11 @@ class Teeter(BaseItem):
         self.image.anchor_x = self.width/2
         self.image.anchor_y = self.height
         self.position = (constants.RESOLUTION[0]/2, 100)
+        
+        self.Base = TeeterBase()
+        self.Base.image.anchor_x = self.Base.width/2
+        self.Base.image.anchor_y = self.Base.height
+        self.Base.position = self.position
 
     def tick(self, dt):
         if abs(self.rotation) < 90:
@@ -21,6 +29,8 @@ class Teeter(BaseItem):
         settleSpeed = 30
         for distance, obj in self.Objects:
             angleOffset = self.rotation - obj.rotation
+            if abs(angleOffset) in (0, 180):
+                return True # tipped!
             sign = angleOffset / abs(angleOffset)
             # Don't over-adjust "into" the teeter; the max adjustment is the total difference.
             adjustment = min(settleSpeed * dt, abs(angleOffset))
@@ -105,4 +115,5 @@ class Teeter(BaseItem):
             dy = math.sin(theta) * distance
             item.position = (x+dx, y-dy)
             item.draw()
+        self.Base.draw()
         BaseItem.draw(self)

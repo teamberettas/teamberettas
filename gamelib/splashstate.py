@@ -34,7 +34,7 @@ class SplashState(gamestate.GameState):
     def onkeypress(self, message):
         key = int(message.topic[-1])
         if key == pyglet.window.key.DOWN:
-            if self.currentSelection < 2:
+            if self.currentSelection < len(self.labels)-1:
                 self.currentSelection += 1
         elif key == pyglet.window.key.UP:
             if self.currentSelection > 0:
